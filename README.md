@@ -3,6 +3,6 @@ After successful login, the user can perform basic banking operations such as ch
 The system updates the balance after each transaction and ensures secure access through password verification.
 
 
+[![View Project](https://img.shields.io/badge/View%20Project-Banking%20System-blue?style=for-the-badge)](https://github.com/DharshiniDillibabu/banking-system/tree/main)
 
-🔗 [View My Simple Banking System Project](https://github.com/DharshiniDillibabu/banking-system/tree/main)
 
