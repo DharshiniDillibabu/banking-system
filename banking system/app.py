@@ -1,35 +1,50 @@
-balance=5000
-while True:
-    user=input("enter pin:")
-    if user!="1234":
-        print("incorrect pin")
-        continue
-    print(f"Current balance: ${balance}")
-    action = input("Would you like to deposit(d), withdraw(w),checkbalance(c) or exit?(e) ").strip().lower()
-    
-    if action == "d":
-        amount = float(input("Enter amount to deposit: "))
-        if amount > 0:
-            balance += amount
-            print(f"${amount} deposited.")
-        else:
-            print("Invalid amount. Please enter a positive number.")
-    
-    elif action == "w":
-        amount = float(input("Enter amount to withdraw: "))
-        if 0 < amount <= balance:
-            balance -= amount
-            print(f"${amount} withdrawn.")
-        else:
-            print("Invalid amount. Please enter a positive number not exceeding your balance.")
-    elif action =="c":
-        print(f"Your current balance is: ${balance}")
-    
-    elif action == "e":
-        print("Exiting the program. Goodbye!")
-        break
-    
-    else:
-        print("Invalid action. Please choose deposit, withdraw, or exit.")
+from flask import Flask, render_template, request
 
-    #exit()
+app = Flask(__name__)
+
+balance = 5000
+pin = "1234"
+
+@app.route("/", methods=["GET", "POST"])
+def home():
+    global balance
+    message = ""
+    if request.method == "POST":
+        user_pin = request.form.get("pin")
+        action = request.form.get("action")
+        amount = request.form.get("amount")
+
+        if user_pin != pin:
+            message = "❌ Incorrect PIN"
+        else:
+            if action == "deposit":
+                try:
+                    amt = float(amount)
+                    if amt > 0:
+                        balance += amt
+                        message = f"✅ Deposited ${amt}. Current Balance: ${balance}"
+                    else:
+                        message = "⚠️ Enter a positive amount"
+                except:
+                    message = "⚠️ Invalid input"
+            
+            elif action == "withdraw":
+                try:
+                    amt = float(amount)
+                    if 0 < amt <= balance:
+                        balance -= amt
+                        message = f"✅ Withdrawn ${amt}. Current Balance: ${balance}"
+                    else:
+                        message = "⚠️ Invalid amount or insufficient balance"
+                except:
+                    message = "⚠️ Invalid input"
+
+            elif action == "check":
+                message = f"💰 Current Balance: ${balance}"
+
+    return render_template("index.html", message=message)
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
+
